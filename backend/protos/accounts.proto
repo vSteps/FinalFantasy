@@ -18,7 +18,7 @@ message AccountResponse {
 }
 
 message LoginRequest {
-    string username = 1;
+    string email = 1; // Adicionando o campo email, que é esperado na função login()
     string password = 2;
 }
 
