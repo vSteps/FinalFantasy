@@ -1,7 +1,7 @@
 from concurrent import futures
 import grpc
-from app.services import AccountService
-import app.accounts_pb2_grpc as accounts_pb2_grpc
+from apps.services import AccountService
+from protos import accounts_pb2_grpc
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

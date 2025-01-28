@@ -1,5 +1,5 @@
-import app.accounts_pb2 as accounts_pb2 # type: ignore
-import app.accounts_pb2_grpc as accounts_pb2_grpc # type: ignore
+from protos import accounts_pb2  # type: ignore
+from protos import accounts_pb2_grpc# type: ignore
 
 class AccountService(accounts_pb2_grpc.AccountServiceServicer):
     def CreateAccount(self, request, context):

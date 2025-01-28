@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { GrpcClientService } from '../../services/grpc-client.service';
+import { FormsModule } from '@angular/forms';
+
 
 
 @Component({
   selector: 'app-profile',
+  standalone: true, 
+  imports: [FormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })

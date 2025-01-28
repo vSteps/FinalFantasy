@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { GrpcClientService } from '../../services/grpc-client.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
+  standalone: true, 
+  imports: [FormsModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
