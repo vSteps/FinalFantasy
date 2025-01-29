@@ -9,7 +9,6 @@ class Program
         var channel = GrpcChannel.ForAddress("http://localhost:50051");
         var client = new TurnBasedGame.TurnBasedGameClient(channel);
 
-
         Console.WriteLine("Bem-vindo ao jogo de batalha!");
         Console.Write("Insira seu ID de jogador: ");
         string playerId = Console.ReadLine();
@@ -18,27 +17,58 @@ class Program
         var joinResponse = client.JoinGame(new JoinGameRequest { PlayerId = playerId });
         Console.WriteLine(joinResponse.Message);
 
-        // Realizar um turno
-        Console.Write("Escolha uma ação (attack, defend, heal): ");
-        string action = Console.ReadLine();
+        bool gameOver = false;
+        Random random = new Random(); // Instanciando o gerador de números aleatórios
 
-        Console.Write("Informe o poder da ação (0-30): ");
-        int power = int.Parse(Console.ReadLine());
-
-        var turnResponse = client.TakeTurn(new TurnRequest
+        while (!gameOver)
         {
-            PlayerId = playerId,
-            Action = action,
-            AttackPower = action == "attack" ? power : 0,
-            DefensePower = action == "defend" ? power : 0,
-            HealPower = action == "heal" ? power : 0
-        });
+            // Escolher a ação
+            Console.Write("Escolha uma ação (attack, defend, heal): ");
+            string action = Console.ReadLine();
 
-        Console.WriteLine(turnResponse.Message);
+            int randomizedPower = 0;
 
-        // Verificar o estado do jogo
-        var gameStateResponse = client.GetGameState(new GameStateRequest { GameId = "game1" });
-        Console.WriteLine($"Jogador 1: {gameStateResponse.Player1} | HP: {gameStateResponse.Player1State.Hp}");
-        Console.WriteLine($"Jogador 2: {gameStateResponse.Player2} | HP: {gameStateResponse.Player2State.Hp}");
+            // Randomização do poder
+            if (action == "attack")
+            {
+                randomizedPower = random.Next(10, 30); // Ataque randomizado entre 10 e 30
+            }
+            else if (action == "heal")
+            {
+                randomizedPower = random.Next(15, 25); // Cura randomizada entre 15 e 25
+            }
+            // Caso a ação seja "defend", não há randomização de poder
+            else if (action != "defend")
+            {
+                Console.WriteLine("Ação inválida. Tente novamente.");
+                continue; // Volta para a escolha de ação
+            }
+
+            // Realizar o turno com a ação e poder randomizados
+            var turnResponse = client.TakeTurn(new TurnRequest
+            {
+                PlayerId = playerId,
+                Action = action,
+                AttackPower = action == "attack" ? randomizedPower : 0,
+                DefensePower = action == "defend" ? randomizedPower : 0,
+                HealPower = action == "heal" ? randomizedPower : 0
+            });
+
+            Console.WriteLine(turnResponse.Message);
+
+            // Verificar o estado do jogo
+            var gameStateResponse = client.GetGameState(new GameStateRequest { GameId = "game1" });
+            Console.WriteLine($"Jogador 1: {gameStateResponse.Player1} | HP: {gameStateResponse.Player1State.Hp}");
+            Console.WriteLine($"Jogador 2: {gameStateResponse.Player2} | HP: {gameStateResponse.Player2State.Hp}");
+
+            // Verificar se algum jogador foi derrotado
+            if (gameStateResponse.Player1State.Hp == 0 || gameStateResponse.Player2State.Hp == 0)
+            {
+                Console.WriteLine("O jogo acabou!");
+                gameOver = true; // Finaliza o loop quando o jogo termina
+            }
+        }
+
+        Console.WriteLine("Obrigado por jogar!");
     }
 }
