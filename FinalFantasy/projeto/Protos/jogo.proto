@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package turnbasedgame;
+
+service TurnBasedGame {
+    rpc JoinGame (JoinGameRequest) returns (JoinGameResponse);
+    rpc TakeTurn (TurnRequest) returns (TurnResponse);
+    rpc GetGameState (GameStateRequest) returns (GameStateResponse);
+}
+
+message JoinGameRequest {
+    string player_id = 1;
+}
+
+message JoinGameResponse {
+    string status = 1;
+    string message = 2;
+}
+
+message TurnRequest {
+    string player_id = 1;
+    string action = 2; // "attack", "defend", "heal"
+    int32 attack_power = 3;
+    int32 defense_power = 4;
+    int32 heal_power = 5;
+}
+
+message TurnResponse {
+    string status = 1;
+    string message = 2;
+    int32 player_health = 3;
+    int32 enemy_health = 4;
+}
+
+message GameStateRequest {
+    string game_id = 1;
+}
+
+message GameStateResponse {
+    string player1 = 1;
+    string player2 = 2;
+    PlayerState player1_state = 3;
+    PlayerState player2_state = 4;
+    string current_turn = 5;
+}
+
+message PlayerState {
+    int32 hp = 1;
+    bool defending = 2;
+}

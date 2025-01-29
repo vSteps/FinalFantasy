@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@angular/fire": "^19.0.0",
-    "@grpc/grpc-js": "^1.12.5",
-    "@protobuf-ts/runtime": "^2.9.4"
-  }
-}
